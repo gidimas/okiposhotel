@@ -41,6 +41,54 @@
       html {
         scroll-behavior: smooth;
       }
+      /* Sticky header */
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        transition: background 0.3s ease;
+      }
+      .site-header.scrolled {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px 0;
+      }
+      .site-header.scrolled .site-logo,
+      .site-header.scrolled .site-menu-toggle {
+        transform: scale(0.85);
+      }
+      /* Menu toggle - always visible and transforms to X when open */
+      .site-menu-toggle {
+        z-index: 10000;
+        cursor: pointer;
+      }
+      .site-menu-toggle span {
+        transition: all 0.3s ease;
+      }
+      .site-menu-toggle.open span {
+        background: #000 !important;
+      }
+      .site-menu-toggle.open span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .site-menu-toggle.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .site-menu-toggle.open span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+      /* Smooth menu animation */
+      .site-navbar {
+        display: block !important;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+      }
+      .site-navbar.active {
+        opacity: 1;
+        visibility: visible;
+      }
     </style>
 </head>
 <body data-aos-easing="ease" data-aos-duration="1000" data-aos-delay="0" class="">
@@ -49,7 +97,7 @@
     <header class="site-header">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-4 site-logo aos-init aos-animate" data-aos="fade"><a href="#" class="animsition-link">O Kipos</a></div>
+          <div class="col-4 site-logo aos-init aos-animate" data-aos="fade"><a href="#" class="animsition-link">O Kipos Hotel</a></div>
           <div class="col-8">
 
             <div class="site-menu-toggle js-site-menu-toggle aos-init aos-animate" data-aos="fade">
@@ -59,7 +107,7 @@
             </div>
             <!-- END menu-toggle -->
 
-            <div class="site-navbar js-site-navbar" style="display: none;">
+            <div class="site-navbar js-site-navbar">
               <nav role="navigation">
                 <div class="container">
                   <div class="row full-height align-items-center">
@@ -405,12 +453,23 @@
 
         // Menu toggle
         $('.js-site-menu-toggle').on('click', function() {
-          $('.js-site-navbar').slideToggle(300);
+          $(this).toggleClass('open');
+          $('.js-site-navbar').toggleClass('active');
         });
 
         // Close menu when clicking a nav link
         $('.site-navbar a').on('click', function() {
-          $('.js-site-navbar').slideUp(300);
+          $('.js-site-menu-toggle').removeClass('open');
+          $('.js-site-navbar').removeClass('active');
+        });
+
+        // Sticky header background on scroll
+        $(window).on('scroll', function() {
+          if ($(this).scrollTop() > 100) {
+            $('.site-header').addClass('scrolled');
+          } else {
+            $('.site-header').removeClass('scrolled');
+          }
         });
       });
     </script>
